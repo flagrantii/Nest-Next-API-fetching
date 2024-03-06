@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAttractionDto } from './dto/create-attraction.dto';
 import { UpdateAttractionDto } from './dto/update-attraction.dto';
+import { Attraction } from './entities/attraction.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AttractionsService {
+  constructor(
+    @InjectRepository(Attraction)
+    private attractionsRepository: Repository<Attraction>,
+  ) {}
+
   create(createAttractionDto: CreateAttractionDto) {
-    return 'This action adds a new attraction';
+    return this.attractionsRepository.save(createAttractionDto);
   }
 
   findAll() {
-    return `This action returns all attractions`;
+    return this.attractionsRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} attraction`;
+    return this.attractionsRepository.findOneBy({ id });
   }
 
   update(id: number, updateAttractionDto: UpdateAttractionDto) {
-    return `This action updates a #${id} attraction`;
+    return this.attractionsRepository.update(id, updateAttractionDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} attraction`;
+    return this.attractionsRepository.delete(id);
   }
 }
